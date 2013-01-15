@@ -1,0 +1,31 @@
+{
+  "name": "Mural",
+  "description": "A simple wallpaper app for Firefox OS",
+  "launch_path": "/mural/index.html",
+  "developer": {
+    "name": "Margaret Leibovic",
+    "url": "http://blog.margaretleibovic.com"
+  },
+  "locales": {
+    "en-US": {
+      "name": "Mural",
+      "description": "A simple wallpaper app for Firefox OS"
+    }
+  },
+  "default_locale": "en-US",
+  "icons": {
+    "128": "/style/icons/blank.png"
+  },
+  "activities": {
+    "pick": {
+      "filters": {
+        "type": ["image/jpeg", "image/png"],
+        "width": 320,
+        "height": 480
+       },
+      "disposition": "inline",
+      "returnValue": true,
+      "href": "/mural/index.html"
+    }
+  }
+}
