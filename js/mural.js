@@ -80,15 +80,18 @@ function pickWallpaper(e) {
   if (!url)
     return;
 
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+  canvas.width = 320;
+  canvas.height = 480;
+
   var img = new Image();
   // Proxy image to avoid cross-origin security exception
   img.src = 'image.cgi?url=' + url;
   img.onload = function() {
-    var canvas = document.createElement('canvas');
-    var context = canvas.getContext('2d');
-    canvas.width = 320;
-    canvas.height = 480;
-    context.drawImage(img, 0, 0);
+    var pattern = context.createPattern(img, 'repeat');
+    context.fillStyle = pattern;
+    context.fillRect(0, 0, 320, 480);
     canvas.toBlob(handleBlob);
   };
 }
