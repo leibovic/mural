@@ -2,7 +2,11 @@
 
 var PATTERNS_TOP = 'http://www.colourlovers.com/api/patterns/top';
 
-var pickActivity;
+// TODO: Find a more robust way to get these values
+var gWallpaperWidth = 320;
+var gWallpaperHeight = 480;
+
+var gPickActivity;
 
 window.addEventListener('DOMContentLoaded', function onDOMContentLoaded() {
   checkInstalled();
@@ -18,7 +22,7 @@ window.addEventListener('DOMContentLoaded', function onDOMContentLoaded() {
     if (request.source.name !== 'pick')
       return;
 
-    pickActivity = request;
+    gPickActivity = request;
     document.body.setAttribute('pick', true);
   });
 });
@@ -82,8 +86,8 @@ function pickWallpaper(e) {
 
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
-  canvas.width = 320;
-  canvas.height = 480;
+  canvas.width = gWallpaperWidth;
+  canvas.height = gWallpaperHeight;
 
   var img = new Image();
   // Proxy image to avoid cross-origin security exception
@@ -91,7 +95,7 @@ function pickWallpaper(e) {
   img.onload = function() {
     var pattern = context.createPattern(img, 'repeat');
     context.fillStyle = pattern;
-    context.fillRect(0, 0, 320, 480);
+    context.fillRect(0, 0, gWallpaperWidth, gWallpaperHeight);
     canvas.toBlob(handleBlob);
   };
 }
@@ -99,15 +103,15 @@ function pickWallpaper(e) {
 // posts result to pick activity, or starts new share activity,
 // depending on the state of the app
 function handleBlob(blob) {
-  if (pickActivity) {
+  if (gPickActivity) {
     console.log('handleBlob: post result to pick activity');
 
-    pickActivity.postResult({
+    gPickActivity.postResult({
       type: 'image/png',
       blob: blob
     }, 'image/png');
 
-    pickActivity = null;
+    gPickActivity = null;
     document.body.removeAttibute('pick');
     return;
   }
@@ -132,10 +136,10 @@ function handleBlob(blob) {
 }
 
 function cancelPick(e) {
-  if (!pickActivity)
+  if (!gPickActivity)
     return;
 
-  pickActivity.postError('cancelled');
-  pickActivity = null;
+  gPickActivity.postError('cancelled');
+  gPickActivity = null;
   document.body.removeAttibute('pick');
 }
