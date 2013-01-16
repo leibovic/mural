@@ -3,7 +3,6 @@
 var PATTERNS_TOP = 'http://www.colourlovers.com/api/patterns/top';
 
 var pickActivity;
-var pickHeader;
 
 window.addEventListener('DOMContentLoaded', function onDOMContentLoaded() {
   checkInstalled();
@@ -15,14 +14,12 @@ window.addEventListener('DOMContentLoaded', function onDOMContentLoaded() {
   if (!navigator.mozSetMessageHandler)
     return;
 
-  pickHeader = document.getElementById('pick-header');
-
   navigator.mozSetMessageHandler('activity', function handleActivity(request) {
     if (request.source.name !== 'pick')
       return;
 
     pickActivity = request;
-    pickHeader.hidden = false;
+    document.body.setAttribute('pick', true);
   });
 });
 
@@ -30,11 +27,12 @@ function checkInstalled() {
   var request = window.navigator.mozApps.getSelf();
   request.onsuccess = function getSelfSuccess() {
     // Bail if the app is already installed
-    if (request.result)
+    if (request.result) {
+      document.body.setAttribute('installed', true);
       return;
+    }
 
     var installButton = document.getElementById('install');
-    installButton.hidden = false;
     installButton.addEventListener('click', installApp);
   };
   request.onerror = function getSelfError() {
@@ -50,6 +48,7 @@ function installApp() {
   var request = navigator.mozApps.install(manifest);
   request.onsuccess = function installSuccess() {
     console.log('success installing app: ' + request.result.manifest.name);
+    document.body.setAttribute('installed', true);
   };
   request.onerror = function installError() {
     console.warn('error installing app: ' + request.error.name);
@@ -106,7 +105,7 @@ function handleBlob(blob) {
     }, 'image/png');
 
     pickActivity = null;
-    pickHeader.hidden = true;
+    document.body.removeAttibute('pick');
     return;
   }
 
@@ -135,5 +134,5 @@ function cancelPick(e) {
 
   pickActivity.postError('cancelled');
   pickActivity = null;
-  pickHeader.hidden = true;
+  document.body.removeAttibute('pick');
 }
