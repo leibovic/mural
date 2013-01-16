@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', function onDOMContentLoaded() {
     if (request.source.name !== 'pick')
       return;
 
-    pickActivty = request;
+    pickActivity = request;
     pickHeader.hidden = false;
   });
 });
